@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cloud Learning Management System</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f1f5f9;
+            padding: 20px
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px
+        }
+        
+        input,
+        button {
+            padding: 12px;
+            margin: 7px 0;
+            width: 100%;
+            box-sizing: border-box
+        }
+        
+        button {
+            background: #3157a4;
+            color: white;
+            border: 0;
+            cursor: pointer
+        }
+        
+        .course {
+            background: #edf3ff;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 7px;
+            overflow-wrap: anywhere
+        }
+        
+        a {
+            display: inline-block;
+            margin: 10px 0
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Learning Management System</h1>
+        <form id="form">
+            <input id="course" placeholder="Course name" required>
+            <input id="material" type="file" required>
+            <button>Add Learning Material</button>
+        </form>
+        <h2>Available Courses</h2>
+        <div id="list"></div>
+    </div>
+    <script>
+        let materials = [];
+        document.getElementById('form').onsubmit = function(e) {
+            e.preventDefault();
+            let course = document.getElementById('course').value.trim();
+            let file = document.getElementById('material').files[0];
+            if (!course || !file) return;
+            materials.push({
+                course,
+                file,
+                id: Date.now() + Math.random()
+            });
+            this.reset();
+            render();
+        };
+
+        function render() {
+            let list = document.getElementById('list');
+            list.replaceChildren();
+            materials.forEach(m => {
+                let div = document.createElement('div');
+                div.className = 'course';
+                let title = document.createElement('h3');
+                title.textContent = m.course;
+                let name = document.createElement('p');
+                name.textContent = 'Material: ' + m.file.name;
+                let link = document.createElement('a');
+                link.textContent = 'Download Material';
+                link.href = URL.createObjectURL(m.file);
+                link.download = m.file.name;
+                div.append(title, name, link);
+                list.appendChild(div);
+            });
+            if (!materials.length) list.textContent = 'No learning materials uploaded.';
+        }
+    </script>
+</body>
+
+</html>
